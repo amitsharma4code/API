@@ -1,19 +1,43 @@
 const BlogModel=require('../models/Blog')
+const cloudinary = require('cloudinary').v2;
+
+// Configuration 
+cloudinary.config({
+  cloud_name: "dwzcdo3uq",
+  api_key: "537226856975565",
+  api_secret: "PuGZrlmHthL8yOa9ntjrNsKoawE"
+});
 
 
 class BlogController{
 static create=async(req,res)=>{
+    // console.log("body",req.body)
+    // console.log('res',req.files)
     try {
-        const {title,description,image}=req.body
-          const result= new  BlogModel({
+        const {title,content,cat}=req.body
+        const image=req.files.image;
+        // console.log(image)
+        const uploadimg= await cloudinary.uploader.upload(
+            image.tempFilePath,{
+                folder:"BlogApiImage"
+            }
+        )
+        // console.log(uplodimg);
+        const result= await new BlogModel({
             title:title,
-            description:description,
-          })
-          await result.save();
-          res.status(201).json({
-            success:true,
+            content:content,
+            category:cat,
+            image:{
+                pulic_id:uploadimg.public_id,
+                url:uploadimg.secure_url
+            }
+        })
+         await result.save();
+         res.status(200).json({
+            success:"true",
+            message:"Blog Inserted Successfully",
             result
-          })
+         })
     } catch (error) {
         console.log(error)
     }
@@ -79,6 +103,33 @@ static view=async(req,res)=>{
         console.log(error)
     }
 
+}
+static viewTopCat = async (req,res)=>{
+    console.log("hello");
+    try {
+        const data = await BlogModel.find({category:"Tech"})
+        // console.log(data)
+        res.status(200).json({
+            success:true,
+            message:"Display Data By Top Tech Company Category ",
+            data
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+static ViewGadgets = async (req,res)=>{
+    try {
+        //  console.log("hello")
+        const data = await BlogModel.find({category:"Gadget"})
+        res.status(200).json({
+            success:true,
+            message:"Dispaly Data By Gadgets Categories",
+            data
+        })
+    } catch (error) {
+       console.log(error)  
+    }
 }
 static update=async(req,res)=>{
     try {

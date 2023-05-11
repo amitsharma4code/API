@@ -2,7 +2,7 @@ const { json } = require("body-parser");
 const jwt = require("jsonwebtoken");
 const UserModel = require("../models/User");
 const admin_auth = async (req, res, next) => {
-    console.log("hello admin")
+    // console.log("hello admin")
   try {
         const bearerHeader= req.headers['authorization'];
         console.log(bearerHeader)

@@ -6,11 +6,22 @@ const blogSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-    description:{
+    content:{
         type:String,
         required:true
     },
-    
+    category:{
+        type:String,
+        required:true
+    },
+    image:{
+        pulic_id:{
+            type:String, 
+        },
+        url:{
+            type:String,
+        }
+    }
 },{timestamps:true})
 
 
